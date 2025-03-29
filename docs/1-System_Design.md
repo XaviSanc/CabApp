@@ -33,8 +33,8 @@ Pattern that focuses on keeping everything in distinct layers where all  the dep
 ![Clean Architecture Reference Guide: Everything You Need to Know About Clean  Architecture | Bitloops Docs](https://storage.googleapis.com/bitloops-github-assets/Documentation%20Images/clean-architecture-cone.jfif)
 
 The folder structure for all the microservices will be the following:
-- **Services folder:** will have the HTTP routers and will interact directly with the controllers in the **Application folder**.
-- **Application folder:** here we will have the controllers with the respective use cases.
+- **Services folder:** will contain the HTTP routers and will interact directly with the controllers in the **Application folder**.
+- **Application folder:** here we will contain the controllers with the respective use cases.
 - **Domain folder:** here the core entities will be defined.
 - **Infrastructure folder:** where the interactions with the database, Kafka and external services will be done.
 
