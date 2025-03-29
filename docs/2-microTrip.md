@@ -198,6 +198,7 @@ The microTrip service is responsible for managing the lifecycle of trips in the 
 ```
 
 ## Workflow - Happy path
+Observation: every 3-5 seconds the location of the driver gets update through the Dispatch service.
 1. Passenger requests available trips → `GET /dispatch/trips`
 - The Dispatch service finds available drivers based on location & availability.
 - Returns a list of potential trips (drivers, estimated prices, ETA, etc.).
@@ -210,14 +211,14 @@ The microTrip service is responsible for managing the lifecycle of trips in the 
 
 4. Driver picks up the passenger and starts the trip → `PATCH /trips/{trip_id}` with `{ "status": "started" }`
 - The microTrip service updates the status.
-- Telemetry data starts being collected by the Dispatch service (location updates, speed, etc.).
+- Telemetry data id collected by the Dispatch service (location updates, speed, etc.).
 
 5. Trip completes → `PATCH /trips/{trip_id}` with `{ "status": "completed" }`
 - The microTrip service records the trip end time.
-- Sends data to Billing service for price calculation.
+- Sends data to Payment service for price calculation.
 - Publishes an event to Analytics Processing for data tracking.
 
-6. Billing calculates price → POST `/billing/trip/{trip_id}`
+6. Payment service calculates price → POST `/billing/trip/{trip_id}`
 - Payment service calculates price.
 - Notification Service notifies the passenger about the trip cost.
 
