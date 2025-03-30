@@ -5,7 +5,7 @@
 Choosing the architecture of an application is one of the most important decisions that needs to be taken, not only for the development of the application but for the mainteinance and expansion that will have.
 
   
-For this use case, where it is mentioned that the development will be a microservice we will build the system using the following architectures:
+For this use case we will build the system using the following architectures:
 
 ###  Event-Driven Architecture: 
 A pattern that uses events to trigger and communicate between decoupled services in an asynchronous way
@@ -19,9 +19,9 @@ A pattern that uses events to trigger and communicate between decoupled services
 
 ## Microservices
 
-Each of the different microservices will be following the next architecture:
+Microservices will enable us to scale each component of the application independently and assign dedicated teams to manage them. This approach will streamline maintenance, development, and deployment of new features. Each of the micros will be using the following architecture
 ### Clean Architecture: 
-Pattern that focuses on keeping everything in distinct layers where all  the dependency injections always point inwards emphasizing in the independence of frameworks.
+A pattern that prioritizes organizing everything into separate layers, with all dependency injections directed inward. It emphasizes framework independence while structuring everything around the core domains.
 #### Pros:
 - Easy to mantain and scale
 - Separation of concerns
