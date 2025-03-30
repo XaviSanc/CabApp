@@ -1,9 +1,4 @@
 
-# Project Title
-
-A brief description of what this project does and who it's for
-
-
 # Tech Stack
 
 For this application we have decided to use Python 3.12.9 and FastAPI as its framework.
