@@ -1,13 +1,18 @@
 services:
-  postgresql:
+  postgres:
     image: "postgres:15.3"
-    container_name: postgresql
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: user
+      POSTGRES_USER: microuser_user
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydatabase
+      POSTGRES_DB: microuser
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U microuser_user -d microuser"]
+      interval: 10s
+      retries: 5
+      timeout: 5s
+
 
   microuser:
     build:
@@ -15,5 +20,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
+    restart: always
     depends_on:
-      - postgresql
+      postgres:
+        condition: service_healthy 
+    
