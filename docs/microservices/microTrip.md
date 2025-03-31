@@ -71,7 +71,7 @@ The microTrip service is responsible for managing the lifecycle of trips in the 
 | Header          |Parameter |  Body            | Type     |       
 |---------------  | | ---------------  |-------- |---------------------------------- |
 | `api_key`       | |                  | `string` | 
-| `Bearer token`  | |                  | `string` | 
+| `Bearer token` |               | `string` | **Required**. Your Bearer token   |
 |                 |`trip_id` |   | `string` | 
 |                 | |     `status`  | `string` | 
 
@@ -140,7 +140,7 @@ The microTrip service is responsible for managing the lifecycle of trips in the 
 | Header          |Parameter |  Body            | Type     |       
 |---------------  | | ---------------  |-------- |---------------------------------- |
 | `api_key`       | |                  | `string` | 
-| `Bearer token`  | |                  | `string` | 
+| `Bearer token` |               | `string` | **Required**. Your Bearer token   |
 |                 |`trip_id` |   | `string` | 
 
 #### Responses

@@ -143,6 +143,7 @@ The microUser service manages user-related data and authentication for both pass
 | Header          | Body            | Type     | Description                        |
 |--------------- |--------------- |-------- |---------------------------------- |
 | `api_key`      |               | `string` | **Required**. Your API key        |
+| `Bearer token` |               | `string` | **Required**. Your Bearer token   |
 |               | `first_name`     | `string` | **Required**                       |
 |               | `last_name`     | `string` | **Required**                       |
 |               | `email`        | `string` | **Required**                       |
@@ -209,6 +210,7 @@ The microUser service manages user-related data and authentication for both pass
 | Header          | Body            | Type     | Description                        |
 |--------------- |--------------- |-------- |---------------------------------- |
 | `api_key`      |               | `string` | **Required**. Your API key        |
+| `Bearer token` |               | `string` | **Required**. Your Bearer token   |
 |               | `first_name`     | `string` | **Required**                       |
 |               | `last_name`     | `string` | **Required**                       |
 |               | `email`        | `string` | **Required**                       |
@@ -275,7 +277,7 @@ The microUser service manages user-related data and authentication for both pass
 | Header          |Parameter |  Body            | Type     |       
 |---------------  | | ---------------  |-------- |---------------------------------- |
 | `api_key`       | |                  | `string` | 
-| `Bearer token`  | |                  | `string` | 
+| `Bearer token` |               | `string` | **Required**. Your Bearer token   |
 |                 |`user_id` |   | `string` | 
 
 
@@ -351,7 +353,7 @@ The microUser service manages user-related data and authentication for both pass
 | Header          |Parameter |  Body            | Type     |       
 |---------------  | | ---------------  |-------- |---------------------------------- |
 | `api_key`       | |                  | `string` | 
-| `Bearer token`  | |                  | `string` | 
+| `Bearer token` |               | `string` | **Required**. Your Bearer token   |
 |                 |`user_id` |   | `string` | 
 
 #### Responses
@@ -398,7 +400,7 @@ The microUser service manages user-related data and authentication for both pass
 | Header          |Parameter |  Body            | Type     |       
 |---------------  | | ---------------  |-------- |---------------------------------- |
 | `api_key`       | |                  | `string` | 
-| `Bearer token`  | |                  | `string` | 
+| `Bearer token` |               | `string` | **Required**. Your Bearer token   |
 |                 |`driver_id` |   | `string` | 
 |                 |`car_id` |   | `string` | 
 
