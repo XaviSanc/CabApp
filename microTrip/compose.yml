@@ -1,13 +1,17 @@
 services:
-  postgresql:
+  postgres:
     image: "postgres:15.3"
-    container_name: postgresql
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: user
+      POSTGRES_USER: microtrip_user
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydatabase
+      POSTGRES_DB: microtrip
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U microtrip_user -d microtrip"]
+      interval: 10s
+      retries: 5
+      timeout: 5s
   microtrip:
     build:
       context: .
@@ -15,4 +19,4 @@ services:
     ports:
       - "8001:8001"
     depends_on:
-      - postgresql
+      - postgres

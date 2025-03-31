@@ -1,43 +1,59 @@
 services:
-  postgresql:
+  postgres:
     image: "postgres:15.3"
-    container_name: postgresql
+    container_name: postgres
     ports:
       - "5432:5432"
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: mydatabase
+    volumes:
+        - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d mydatabase"]
+      interval: 10s
+      retries: 5
+      timeout: 5s
 
   microuser:
     build: ./microUser
     ports:
       - "8000:8000"
+    restart: always
     depends_on:
-      - postgresql
+      postgres:
+        condition: service_healthy 
 
   microtrip:
     build: ./microTrip
     ports:
       - "8001:8001"
+    restart: always
     depends_on:
-      - postgresql
+      postgres:
+        condition: service_healthy 
 
   micropayment:
-    build: ./microPayment
+    build: ./microPayment   
     ports:
       - "8002:8002"
+    restart: always
     depends_on:
-      - postgresql
+      postgres:
+        condition: service_healthy 
 
   microdispatch:
     build: ./microDispatch
     ports:
       - "8003:8003"
+    restart: always
     depends_on:
-      - postgresql
+      postgres:
+        condition: service_healthy 
 
   micronotification:
     build: ./microNotification
     ports:
       - "8004:8004"
+    restart: always

@@ -1,13 +1,18 @@
 services:
-  postgresql:
+  postgres:
     image: "postgres:15.3"
-    container_name: postgresql
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: user
+      POSTGRES_USER: microdispatch_user
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydatabase
+      POSTGRES_DB: microdispatch
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U microdispatch_user -d microdispatch"]
+      interval: 10s
+      retries: 5
+      timeout: 5s
+
 
   microdispatch:
     build:
@@ -16,4 +21,4 @@ services:
     ports:
       - "8003:8003"
     depends_on:
-      - postgresql
+      - postgres
