@@ -21,13 +21,12 @@ def get_login_use_case(repository: Annotated[PassengersRepository, Depends(get_p
 
 @router.post("/v1/passengers/login", response_model=Token)
 async def login_for_passenger(
-    #use_case: Annotated[LoginPassengerUseCase, Depends(get_login_use_case)],
+    use_case: Annotated[LoginPassengerUseCase, Depends(get_login_use_case)],
     form_data: OAuth2PasswordRequestForm = Depends(),
-    conn= Depends(get_db)
-)->Token:
+    )->Token:
     try:
-        repository = PassengersRepository(conn)
-        use_case = LoginPassengerUseCase(repository)
+        # repository = PassengersRepository(conn)
+        # use_case = LoginPassengerUseCase(repository)
         token = await use_case.execute(form_data.username, form_data.password)
         return token
     except HTTPException as e:  
