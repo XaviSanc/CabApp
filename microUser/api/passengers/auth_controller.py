@@ -25,10 +25,7 @@ async def login_for_passenger(
     form_data: OAuth2PasswordRequestForm = Depends(),
     )->Token:
     try:
-        # repository = PassengersRepository(conn)
-        # use_case = LoginPassengerUseCase(repository)
-        token = await use_case.execute(form_data.username, form_data.password)
-        return token
+        return await use_case.execute(form_data.username, form_data.password)
     except HTTPException as e:  
         raise e 
     except Exception as e:
