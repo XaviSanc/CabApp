@@ -11,7 +11,7 @@ from api.passengers import auth_controller
 async def lifespan(_: FastAPI):
     try:
         await PostgreSQL.connect()
-        #await initialize_database()
+        await initialize_database()
         yield
         await PostgreSQL.close()
     except Exception as e:
