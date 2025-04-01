@@ -48,16 +48,14 @@ class PostgreSQL:
         
 
 async def get_db():
-    postgresql = None
     if PostgreSQL.conn is None:
         logger.warning("PostgreSQL is not connected. Attempting to reconnect...")
         try:
-            postgresql = PostgreSQL()
-            await postgresql.connect()
+            await PostgreSQL.connect()
         except ConnectionError as e:
             logger.error(f"Connection error with PostgreSQL: {e}")
             raise PostgreSQLException(f"Connection error with PostgreSQL: {e}")
-    return postgresql.conn if postgresql is not None else PostgreSQL.conn
+    return PostgreSQL.conn
 
 
 async def initialize_database():
@@ -84,7 +82,26 @@ async def initialize_database():
 
         await conn.execute("INSERT INTO driver.test (name, license_number) VALUES ('John Doe', 'DR12345') ON CONFLICT DO NOTHING;")
         await conn.execute("INSERT INTO passenger.test (name, email) VALUES ('Jane Smith', 'jane@example.com') ON CONFLICT DO NOTHING;")
+        await conn.execute(""" 
+            CREATE TABLE IF NOT EXISTS passenger.users (
+                user_id VARCHAR(255) PRIMARY KEY,
+                first_name VARCHAR(255),
+                last_name VARCHAR(255),
+                email VARCHAR(255) UNIQUE NOT NULL,
+                phone_number VARCHAR(255),
+                hashed_password VARCHAR(255) NOT NULL
+                    );
+            """)
 
+        await conn.execute("""
+            INSERT INTO passenger.users (user_id, first_name, last_name, email, phone_number, hashed_password)
+            VALUES 
+                ('passenger456', 'Juan', 'Fernandez', 'juan@example.com', '+34666333222', '$2b$12$Ybv65tvXTSLQpYuagO.SOuTzRlCxBlYE2f4A6k2xLqzJdgdnNv37a'),
+                ('passenger457', 'Maria', 'Lopez', 'maria@example.com', '+34666333223', '$2b$12$Ybv65tvXTSLQpYuagO.SOuTzRlCxBlYE2f4A6k2xLqzJdgdnNv37a'),
+                ('passenger458', 'Carlos', 'Garcia', 'carlos@example.com', '+34666333224', '$2b$12$Ybv65tvXTSLQpYuagO.SOuTzRlCxBlYE2f4A6k2xLqzJdgdnNv37a'),
+                ('passenger459', 'Ana', 'Martinez', 'ana@example.com', '+34666333225', '$2b$12$Ybv65tvXTSLQpYuagO.SOuTzRlCxBlYE2f4A6k2xLqzJdgdnNv37a'),
+                ('passenger460', 'Pedro', 'Gomez', 'pedro@example.com', '+34666333226', '$2b$12$Ybv65tvXTSLQpYuagO.SOuTzRlCxBlYE2f4A6k2xLqzJdgdnNv37a');
+            """)
     except ConnectionError as e:
         raise e from e
     except Exception as e:
