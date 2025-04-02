@@ -1,0 +1,83 @@
+##Pipeline made for Azure pipelins it WON'T work for github actions
+## TODO: Implement Test stage and make that deployment stage depends on the Test stage result. 
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - dev
+
+variables:
+
+  # Api app name
+  apiAppName: 'microUser-dev'
+
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
+
+  # Environment name
+  environmentName: $(apiAppName)
+
+  # Python version: 3.9
+  pythonVersion: '3.9'
+
+  azureServiceConnectionId: 'Dev-Service-Connection'
+
+stages:
+- stage: Build
+  displayName: Build stage
+  jobs:
+  - job: BuildJob
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: UsePythonVersion@0
+      displayName: 'Use Python $(pythonVersion)'
+      inputs:
+        versionSpec: '$(pythonVersion)'
+    - task: ArchiveFiles@2
+      inputs:
+        rootFolderOrFile: '$(Build.SourcesDirectory)'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+        replaceExistingArchive: true
+    
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+      displayName: 'Upload package'
+      artifact: drop
+
+- stage: Deploy
+  displayName: 'Deploy API App'
+  dependsOn: Build
+  condition: succeeded()
+  jobs:
+  - deployment: DeploymentJob
+    pool:
+      vmImage: $(vmImageName)
+    environment: $(environmentName)
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '$(pythonVersion)'
+            displayName: 'Use Python version'
+          - task: AzureWebApp@1
+            displayName: 'Deploy API App : $(apiAppName)'
+            inputs:
+              azureSubscription: $(azureServiceConnectionId)
+              appName: $(apiAppName)
+              appType: 'webAppLinux'
+              package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
+              deploymentMethod: zipDeploy
+          - script: |
+              sleep 60
+            displayName: "Delaying 1 minute"
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: $(azureServiceConnectionId)
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: 'az apim api import --path "$(apiAppName)" --service-name {ap-gw-resource-name} -g {resource-group} --api-id $(apiAppName)   --specification-format OpenApiJson --specification-url "https://$(apiAppName).azurewebsites.net/openapi.json" --service-url "https://$(apiAppName).azurewebsites.net/"'
