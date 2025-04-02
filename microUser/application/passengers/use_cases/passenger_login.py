@@ -1,5 +1,6 @@
 
 from fastapi import HTTPException
+from loguru import logger
 from domain.entities.passengers.token import Token
 from domain.repositories.passengers.passengers_repository import PassengersRepository
 from domain.services.auth_service import AuthService, AuthServiceException, InvalidCredentials
@@ -39,18 +40,23 @@ class LoginPassengerUseCase:
             return Token(access_token=access_token, token_type="bearer")
         
         except PostgreSQLException as e:
+            logger.error(f"Database error {e}", exc_info=True) 
             raise DatabaseException()
         
         except InvalidCredentialsException as e:
+            logger.error(f"Not valid credentials {e}", exc_info=True) 
             raise InvalidCredentialsException()
         
         except InvalidCredentials as e:
+            logger.error(f"Not valid credentials {e}", exc_info=True) 
             raise InvalidCredentialsException()
 
         except AuthServiceException as e:
+            logger.error(f"Error in Auth service {e}", exc_info=True) 
             raise AuthServiceException()
 
         except Exception as e:
+            logger.critical(f"Unexpected error: {e}", exc_info=True) 
             raise LoginPassengerUseCaseError(detail=f"Unexpected error: {str(e)}", status_code=500)
 
 

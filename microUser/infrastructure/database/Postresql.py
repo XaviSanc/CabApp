@@ -96,5 +96,5 @@ async def initialize_database():
     except ConnectionError as e:
         raise e from e
     except Exception as e:
-        logger.error(f"Unknown exception from Mongo: {e}")
+        logger.error(f"Unknown exception from PostgreSQL: {e}")
         raise PostgreSQLException(f"Unknown exception from PostregSQL {e}")

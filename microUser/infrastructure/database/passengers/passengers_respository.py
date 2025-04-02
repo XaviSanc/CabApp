@@ -18,12 +18,12 @@ class PassengersRepository(schema.PassengersRepository):
                 query = f"SELECT email, hashed_password FROM passenger.{PASSENGER_TABLE} WHERE email = $1"
                 return await conn.fetchrow(query, email)
         except ConnectionError as e:
-            logger.error(f"Error while connecting to Postgre: {e}")
-            raise ConnectionError(f"Error while connecting to Postgre:  {e}")
+            logger.error(f"Error while connecting to PostregSQL: {e}")
+            raise ConnectionError(f"Error while connecting to PostregSQL:  {e}")
         except Exception as e:
-            logger.error(f"Error while retrieving events from Postgre: {e}")
+            logger.error(f"Error while retrieving events from PostregSQL: {e}")
             raise PostgreSQLException(
-                f"Error while retrieving events from Postgre: {e}"
+                f"Error while retrieving events from PostregSQL: {e}"
             )
 
 

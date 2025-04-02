@@ -1,5 +1,6 @@
 from datetime import  datetime, timedelta, timezone
 from typing import Optional
+from loguru import logger
 from passlib.context import CryptContext
 from decouple import config
 from jose import JWTError, jwt
@@ -22,7 +23,8 @@ class AuthService:
             if not pwd_context.verify(plain_password, hashed_password):
                 raise InvalidCredentials("Incorrect password")
             return True
-        except ValueError as e:
+        except (ValueError, TypeError) as e:
+            logger.error(f"Error while verifying hashed_password: {e}", exc_info=True) 
             raise AuthServiceException(f"Error while verifying the password: {e}")
     
     @staticmethod
@@ -38,5 +40,6 @@ class AuthService:
         try:
             encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
         except JWTError as e:
+            logger.error(f"Error while encoding jwt: {e}", exc_info=True) 
             raise AuthServiceException(f"Error while encoding jwt: {e}")
         return encoded_jwt
