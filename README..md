@@ -28,6 +28,12 @@ You will be able to find the microservices under these ports:
 - microPayment: http://localhost:8002/docs
 - microNotification: http://localhost:8004/docs
 
+For testing the Auth endpoint use:
+- Username: juan@example.com
+- Password: password123
+
+All of the users created have the same password.
+
 ## What has been done
 - FastAPI app
 - Clean architecture
@@ -35,6 +41,6 @@ You will be able to find the microservices under these ports:
 - Async implementation
 - Using asyncpg for PostgreSQL and Pooling techniques
 - Initialization of all microservices databases and users
-- oAuth system
+- oAuth system with password encrypting
 - Makefile
 - Logging
