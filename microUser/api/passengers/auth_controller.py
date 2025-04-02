@@ -11,7 +11,7 @@ from domain.services.auth_service import AuthServiceException
 from loguru import logger
 
 router = APIRouter(prefix="/auth")
-oauth2_schema = OAuth2PasswordBearer(tokenUrl="api/auth//v1/passengers/login")  
+oauth2_schema = OAuth2PasswordBearer(tokenUrl="api/auth/v1/passengers/login")  
 
 def get_passenger_repository(conn: Annotated[asyncpg.Pool, Depends(get_db)]) -> PassengersRepository:
     return PassengersRepository(conn)
