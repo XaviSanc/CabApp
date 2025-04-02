@@ -64,24 +64,7 @@ async def initialize_database():
         conn = PostgreSQL().conn
         await conn.execute("CREATE SCHEMA IF NOT EXISTS driver;")
         await conn.execute("CREATE SCHEMA IF NOT EXISTS passenger;")
-        await conn.execute("""
-            CREATE TABLE IF NOT EXISTS driver.test (
-                id SERIAL PRIMARY KEY,
-                name TEXT NOT NULL,
-                license_number TEXT UNIQUE NOT NULL
-            );
-        """)
 
-        await conn.execute("""
-            CREATE TABLE IF NOT EXISTS passenger.test (
-                id SERIAL PRIMARY KEY,
-                name TEXT NOT NULL,
-                email TEXT UNIQUE NOT NULL
-            );
-        """)
-
-        await conn.execute("INSERT INTO driver.test (name, license_number) VALUES ('John Doe', 'DR12345') ON CONFLICT DO NOTHING;")
-        await conn.execute("INSERT INTO passenger.test (name, email) VALUES ('Jane Smith', 'jane@example.com') ON CONFLICT DO NOTHING;")
         await conn.execute(""" 
             CREATE TABLE IF NOT EXISTS passenger.users (
                 user_id VARCHAR(255) PRIMARY KEY,
@@ -94,14 +77,22 @@ async def initialize_database():
             """)
 
         await conn.execute("""
-            INSERT INTO passenger.users (user_id, first_name, last_name, email, phone_number, hashed_password)
-            VALUES 
+            INSERT INTO passenger.users (
+                user_id, first_name, last_name, email, phone_number, hashed_password
+            ) VALUES 
                 ('passenger456', 'Juan', 'Fernandez', 'juan@example.com', '+34666333222', '$2b$12$Ybv65tvXTSLQpYuagO.SOuTzRlCxBlYE2f4A6k2xLqzJdgdnNv37a'),
                 ('passenger457', 'Maria', 'Lopez', 'maria@example.com', '+34666333223', '$2b$12$Ybv65tvXTSLQpYuagO.SOuTzRlCxBlYE2f4A6k2xLqzJdgdnNv37a'),
                 ('passenger458', 'Carlos', 'Garcia', 'carlos@example.com', '+34666333224', '$2b$12$Ybv65tvXTSLQpYuagO.SOuTzRlCxBlYE2f4A6k2xLqzJdgdnNv37a'),
                 ('passenger459', 'Ana', 'Martinez', 'ana@example.com', '+34666333225', '$2b$12$Ybv65tvXTSLQpYuagO.SOuTzRlCxBlYE2f4A6k2xLqzJdgdnNv37a'),
-                ('passenger460', 'Pedro', 'Gomez', 'pedro@example.com', '+34666333226', '$2b$12$Ybv65tvXTSLQpYuagO.SOuTzRlCxBlYE2f4A6k2xLqzJdgdnNv37a');
-            """)
+                ('passenger460', 'Pedro', 'Gomez', 'pedro@example.com', '+34666333226', '$2b$12$Ybv65tvXTSLQpYuagO.SOuTzRlCxBlYE2f4A6k2xLqzJdgdnNv37a')
+            ON CONFLICT (user_id) 
+            DO UPDATE SET 
+                first_name = EXCLUDED.first_name,
+                last_name = EXCLUDED.last_name,
+                email = EXCLUDED.email,
+                phone_number = EXCLUDED.phone_number,
+                hashed_password = EXCLUDED.hashed_password;
+        """)
     except ConnectionError as e:
         raise e from e
     except Exception as e:

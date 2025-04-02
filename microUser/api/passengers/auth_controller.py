@@ -24,6 +24,9 @@ async def login_for_passenger(
     use_case: Annotated[LoginPassengerUseCase, Depends(get_login_use_case)],
     form_data: OAuth2PasswordRequestForm = Depends(),
     )->Token:
+    """
+    Authenticates a passenger and returns an access token for session management.
+    """
     try:
         return await use_case.execute(form_data.username, form_data.password)
     except HTTPException as e:  
@@ -35,4 +38,7 @@ async def login_for_passenger(
   
 @router.get("/v1/test")
 async def test(token = Depends(oauth2_schema)):
+    """
+    Endpoint created to trigger the 'Authorization' button in the docs!
+    """
     raise NotImplementedError

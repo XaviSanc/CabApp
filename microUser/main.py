@@ -19,7 +19,6 @@ async def lifespan(_: FastAPI):
             f"Exception raised while initializing database {e}"
         )
 
-
 app = FastAPI(
     title="microUser",
     docs_url="/docs",
@@ -28,15 +27,7 @@ app = FastAPI(
 
 API_PREFIX = "/api"
 
-
 app.include_router(auth_controller.router, prefix=API_PREFIX, tags=["Auth"])
-
-@app.get("/test")
-async def get_things(db=Depends(get_db)):
-    query = "SELECT * FROM passenger.test;" 
-    results = await db.fetch(query)
-    return {"data": results}
-
 
 @app.get("/health")
 def health_check():
